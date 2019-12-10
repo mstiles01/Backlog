@@ -7,22 +7,31 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BacklogBeta.Data;
 using BacklogBeta.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace BacklogBeta.Controllers
 {
     public class MoviesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public MoviesController(ApplicationDbContext context)
+        public MoviesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+
         }
 
-        // GET: Movies
-        public async Task<IActionResult> Index()
+        // GET: Movie
+        public async Task<IActionResult> Index(string errorMessage)
         {
-            var applicationDbContext = _context.Movie.Include(m => m.User);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var applicationDbContext = _context
+                                            .Movie
+                                            .Include(movie => movie.User)
+                                            .Where(movie => movie.UserId == user.Id);
+            ViewBag.Error = errorMessage;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,7 +44,7 @@ namespace BacklogBeta.Controllers
             }
 
             var movie = await _context.Movie
-                .Include(m => m.User)
+                .Include(movie => movie.User)
                 .FirstOrDefaultAsync(m => m.MovieId == id);
             if (movie == null)
             {
@@ -48,7 +57,7 @@ namespace BacklogBeta.Controllers
         // GET: Movies/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
 
@@ -57,10 +66,15 @@ namespace BacklogBeta.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MovieId,Title,Description,Director,PublishedDate,UserId")] Movie movie)
+        public async Task<IActionResult> Create( Movie movie)
         {
+            ModelState.Remove("User");
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(HttpContext.User);
+                movie.UserId = user.Id;
+                movie.User = user;
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -68,7 +82,6 @@ namespace BacklogBeta.Controllers
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", movie.UserId);
             return View(movie);
         }
-
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
