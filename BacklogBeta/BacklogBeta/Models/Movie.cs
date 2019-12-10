@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Backlog.Models
+namespace BacklogBeta.Models
 {
     public class Movie
     {

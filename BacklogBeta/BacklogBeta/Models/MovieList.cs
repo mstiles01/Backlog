@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Backlog.Models
+namespace BacklogBeta.Models
 {
     public class MovieList
     {
@@ -14,7 +14,8 @@ namespace Backlog.Models
         public int MovieId { get; set; }
         [Required]
         public int ListId { get; set; }
+       
         public Movie Movie { get; set; }
-        public List List { get; set;  }
+        public List List { get; set; }
     }
 }
