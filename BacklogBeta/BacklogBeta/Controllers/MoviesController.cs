@@ -30,9 +30,9 @@ namespace BacklogBeta.Controllers
             var applicationDbContext = _context
                                             .Movie
                                             .Include(movie => movie.User)
-                                            .Where(movie => movie.UserId == user.Id);
-            ViewBag.Error = errorMessage;
-            return View(await applicationDbContext.ToListAsync());
+                                            .Where(movie => movie.UserId ==user.Id);
+            var movie = _context.Movie.ToListAsync();
+            return View(await movie);
         }
 
         // GET: Movies/Details/5
@@ -70,6 +70,7 @@ namespace BacklogBeta.Controllers
         {
             ModelState.Remove("User");
             ModelState.Remove("UserId");
+            ModelState.Remove("MovieId");
             if (ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(HttpContext.User);
@@ -77,6 +78,7 @@ namespace BacklogBeta.Controllers
                 movie.User = user;
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
+               
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", movie.UserId);

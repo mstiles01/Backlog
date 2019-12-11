@@ -186,6 +186,7 @@ namespace BacklogBeta.Migrations
                     Description = table.Column<string>(nullable: false),
                     Director = table.Column<string>(nullable: false),
                     PublishedDate = table.Column<DateTime>(nullable: false),
+                    ImgUrl = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>

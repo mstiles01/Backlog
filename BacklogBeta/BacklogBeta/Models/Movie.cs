@@ -19,8 +19,8 @@ namespace BacklogBeta.Models
         public string Director { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime PublishedDate { get; set; }
+        public string ImgUrl { get; set; }
         [Required]
         public ApplicationUser User { get; set; }
         [Required]
