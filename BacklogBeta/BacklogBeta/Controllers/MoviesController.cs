@@ -106,17 +106,21 @@ namespace BacklogBeta.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MovieId,Title,Description,Director,PublishedDate,UserId")] Movie movie)
+        public async Task<IActionResult> Edit(int id, Movie movie)
         {
             if (id != movie.MovieId)
             {
                 return NotFound();
             }
-
+            ModelState.Remove("UserId");
+            ModelState.Remove("User");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    movie.UserId = user.Id;
+                    movie.User = user;
                     _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }
@@ -133,9 +137,10 @@ namespace BacklogBeta.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", movie.UserId);
+            //ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", viewModel.Product.ProductTypeId);
             return View(movie);
         }
+
 
         // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(int? id)
