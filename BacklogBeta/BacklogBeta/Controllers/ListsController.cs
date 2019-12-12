@@ -33,14 +33,19 @@ namespace BacklogBeta.Controllers
                                             .List
                                             .Include(list => list.User)
                                             .Where(list => list.UserId == user.Id);
-            var list = _context.List.ToListAsync();
-            return View(await list);
+            ViewBag.Error = errorMessage;
+            return View(await applicationDbContext.ToListAsync());
         }
 
 
         // GET: Lists/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var applicationDbContext = _context
+                                            .List
+                                            .Include(list => list.User)
+                                            .Where(list => list.UserId == user.Id);
             if (id == null)
             {
                 return NotFound();
@@ -54,7 +59,8 @@ namespace BacklogBeta.Controllers
                 return NotFound();
             }
 
-            return View(list);
+            
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: List/Create
