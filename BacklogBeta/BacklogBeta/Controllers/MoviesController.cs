@@ -41,10 +41,7 @@ namespace BacklogBeta.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var applicationDbContext = _context
-                                            .Movie
-                                            .Include(movie => movie.User)
-                                            .Where(movie => movie.UserId == user.Id);
+
             if (id == null)
             {
                 return NotFound();
@@ -58,7 +55,12 @@ namespace BacklogBeta.Controllers
                 return NotFound();
             }
 
-            return View(await applicationDbContext.ToListAsync());
+            if (movie.UserId != user.Id)
+            {
+                return NotFound();
+            }
+
+            return View(movie);
         }
 
         // GET: Movies/Create
@@ -152,6 +154,8 @@ namespace BacklogBeta.Controllers
         // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
             if (id == null)
             {
                 return NotFound();
@@ -161,6 +165,11 @@ namespace BacklogBeta.Controllers
                 .Include(m => m.User)
                 .FirstOrDefaultAsync(m => m.MovieId == id);
             if (movie == null)
+            {
+                return NotFound();
+            }
+
+            if (movie.UserId != user.Id)
             {
                 return NotFound();
             }
