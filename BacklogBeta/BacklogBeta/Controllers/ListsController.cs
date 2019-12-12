@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using BacklogBeta.Data;
 using BacklogBeta.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BacklogBeta.Controllers
 {
+    [Authorize]
     public class ListsController : Controller
     {
         private readonly ApplicationDbContext _context;
