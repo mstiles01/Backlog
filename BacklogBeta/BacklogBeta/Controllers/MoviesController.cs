@@ -32,14 +32,16 @@ namespace BacklogBeta.Controllers
             var applicationDbContext = _context
                                             .Movie
                                             .Include(movie => movie.User)
-                                            .Where(movie => movie.UserId ==user.Id);
-            var movie = _context.Movie.ToListAsync();
-            return View(await movie);
+                                            .Where(movie => movie.UserId == user.Id);
+            ViewBag.Error = errorMessage;
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
             if (id == null)
             {
                 return NotFound();
@@ -49,6 +51,11 @@ namespace BacklogBeta.Controllers
                 .Include(movie => movie.User)
                 .FirstOrDefaultAsync(m => m.MovieId == id);
             if (movie == null)
+            {
+                return NotFound();
+            }
+
+            if (movie.UserId != user.Id)
             {
                 return NotFound();
             }
@@ -147,6 +154,8 @@ namespace BacklogBeta.Controllers
         // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
             if (id == null)
             {
                 return NotFound();
@@ -156,6 +165,11 @@ namespace BacklogBeta.Controllers
                 .Include(m => m.User)
                 .FirstOrDefaultAsync(m => m.MovieId == id);
             if (movie == null)
+            {
+                return NotFound();
+            }
+
+            if (movie.UserId != user.Id)
             {
                 return NotFound();
             }
