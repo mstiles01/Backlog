@@ -42,10 +42,7 @@ namespace BacklogBeta.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var applicationDbContext = _context
-                                            .List
-                                            .Include(list => list.User)
-                                            .Where(list => list.UserId == user.Id);
+
             if (id == null)
             {
                 return NotFound();
@@ -59,8 +56,12 @@ namespace BacklogBeta.Controllers
                 return NotFound();
             }
 
-            
-            return View(await applicationDbContext.ToListAsync());
+            if (list.UserId != user.Id)
+            {
+                return NotFound();
+            }
+
+            return View(list);
         }
 
         // GET: List/Create
@@ -153,6 +154,8 @@ namespace BacklogBeta.Controllers
         // GET: Lists/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
             if (id == null)
             {
                 return NotFound();
@@ -166,6 +169,10 @@ namespace BacklogBeta.Controllers
                 return NotFound();
             }
 
+            if (list.UserId != user.Id)
+            {
+                return NotFound();
+            }
             return View(list);
         }
 

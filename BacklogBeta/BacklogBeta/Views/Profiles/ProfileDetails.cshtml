@@ -1,0 +1,54 @@
+﻿
+
+@model BacklogBeta.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "ProfileDetails";
+}
+
+<h1>Profile</h1>
+
+<div>
+    <h4>Account Information</h4>
+    <p> <a asp-controller="Profile" asp-action="Edit" asp-route-id="Profile">Edit Profile</a></p>
+    <hr />
+    <dl class="row">
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+      
+        
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CityState)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CityState)
+        </dd>
+
+    </dl>
+    @foreach (var item in Model.Lists)
+    {
+
+        <td>
+            <p>Lists:</p> @Html.DisplayFor(mo => item.Name)
+        </td>
+       
+
+    }
+    <td>
+        <a asp-controller="Lists" asp-action="Create" asp-route-id="Lists"> Create List</a> |
+        <a asp-controller="Lists" asp-action="Index"> My Lists</a> |
+
+    </td>
+</div>
+
