@@ -80,7 +80,7 @@ namespace BacklogBeta.Controllers
         {
             ModelState.Remove("User");
             ModelState.Remove("UserId");
-            
+
             if (ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(HttpContext.User);
@@ -94,7 +94,9 @@ namespace BacklogBeta.Controllers
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", list.UserId);
             return View(list);
         }
-        // GET: Movies/Edit/5
+
+        
+        // GET: List/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
