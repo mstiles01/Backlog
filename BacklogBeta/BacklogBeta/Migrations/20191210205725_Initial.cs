@@ -230,7 +230,7 @@ namespace BacklogBeta.Migrations
                         column: x => x.MovieId,
                         principalTable: "Movie",
                         principalColumn: "MovieId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

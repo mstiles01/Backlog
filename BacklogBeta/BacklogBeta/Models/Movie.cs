@@ -26,9 +26,7 @@ namespace BacklogBeta.Models
         public ApplicationUser User { get; set; }
         [Required]
         public string UserId { get; set; }
-
-
-    public ICollection<MovieList> MovieList { get; set; }
+        public ICollection<MovieList> MovieList { get; set; }
 
 
 
