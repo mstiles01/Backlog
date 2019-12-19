@@ -253,7 +253,18 @@ namespace BacklogBeta.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
+
+       
         {
+            {
+                var ListRefIds = _context.MovieList.Where(lrfi => lrfi.List.ListId == id);
+                foreach (var listId in ListRefIds)
+                {
+                    _context.MovieList.Remove(listId);
+
+                }
+            }
+
             var list = await _context.List.FindAsync(id);
             _context.List.Remove(list);
             await _context.SaveChangesAsync();
