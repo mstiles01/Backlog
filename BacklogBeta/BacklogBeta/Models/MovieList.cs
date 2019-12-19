@@ -9,7 +9,7 @@ namespace BacklogBeta.Models
     public class MovieList
     {
         [Key]
-        public int MovieListId { get; set; }
+        public int? MovieListId { get; set; }
         [Required]
         public int MovieId { get; set; }
         [Required]
@@ -17,5 +17,7 @@ namespace BacklogBeta.Models
        
         public Movie Movie { get; set; }
         public List List { get; set; }
+       
+
     }
 }

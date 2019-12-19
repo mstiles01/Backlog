@@ -218,19 +218,19 @@ namespace BacklogBeta.Migrations
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MovieList_List_ListId",
                         column: x => x.ListId,
                         principalTable: "List",
                         principalColumn: "ListId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MovieList_Movie_MovieId",
                         column: x => x.MovieId,
                         principalTable: "Movie",
                         principalColumn: "MovieId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

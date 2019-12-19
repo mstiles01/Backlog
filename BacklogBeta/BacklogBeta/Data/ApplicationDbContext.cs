@@ -15,6 +15,7 @@ namespace BacklogBeta.Data
         public DbSet<Movie> Movie { get; set; }
         public DbSet<List> List { get; set; }
         public DbSet<MovieList> MovieList { get; set; }
+        
     }
 }
 
