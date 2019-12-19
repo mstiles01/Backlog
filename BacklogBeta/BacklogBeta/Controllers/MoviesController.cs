@@ -107,6 +107,9 @@ namespace BacklogBeta.Controllers
             {
                 return NotFound();
             }
+
+            
+
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", movie.UserId);
             return View(movie);
         }
