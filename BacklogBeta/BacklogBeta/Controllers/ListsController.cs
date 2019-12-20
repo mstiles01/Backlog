@@ -57,9 +57,9 @@ namespace BacklogBeta.Controllers
                 .Include(l => l.User)
                 .Include(l => l.MovieList).ThenInclude(l => l.Movie)
                 .FirstOrDefaultAsync(m => m.ListId == id)
-                
+
             };
-                
+
 
             if (listDetails == null)
             {
@@ -67,20 +67,20 @@ namespace BacklogBeta.Controllers
             }
 
 
-           
+
 
             if (listDetails.List.UserId != user.Id)
             {
                 return NotFound();
             }
 
-            
+
             return View(listDetails);
         }
 
-        
 
-        
+
+
         // GET: List/Create
         public IActionResult Create()
         {
@@ -115,21 +115,21 @@ namespace BacklogBeta.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            
+
 
             if (id == null)
             {
                 return NotFound();
             }
-            
+
             var viewModel = new MovieListEditViewModel()
 
-         
+
             {
                 Movie = await _context.Movie.FindAsync(id),
                 List = await _context.List.FindAsync(id)
-             
-                
+
+
 
             };
 
@@ -148,84 +148,84 @@ namespace BacklogBeta.Controllers
             ViewData["Movie"] = new SelectList(_context.Movie, "MovieId", "Title", viewModel.Movie.MovieId);
             return View(viewModel);
         }
-    
 
-    // POST: List/Edit/5
-    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, MovieListEditViewModel viewModel)
-    {
+
+        // POST: List/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, MovieListEditViewModel viewModel)
+        {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
 
-            
+
 
 
             if (id != viewModel.List.ListId)
-        {
-            return NotFound();
-        }
-        ModelState.Remove("List.UserId");
-        ModelState.Remove("List.User");
-        ModelState.Remove("Movie.User");
-        ModelState.Remove("Movie.Title");
-        ModelState.Remove("Movie.Description");
-        ModelState.Remove("Movie.Director");
-        ModelState.Remove("Movie.UserId");
-        
+            {
+                return NotFound();
+            }
+            ModelState.Remove("List.UserId");
+            ModelState.Remove("List.User");
+            ModelState.Remove("Movie.User");
+            ModelState.Remove("Movie.Title");
+            ModelState.Remove("Movie.Description");
+            ModelState.Remove("Movie.Director");
+            ModelState.Remove("Movie.UserId");
 
-           
-          
+
+
+
 
             if (ModelState.IsValid)
 
-        {
+            {
 
                 var newList = new MovieList
                 {
-                   
+
                     MovieListId = viewModel.MovieListInstance?.MovieListId,
                     ListId = viewModel.List.ListId,
                     MovieId = viewModel.Movie.MovieId
-                   
+
                 };
 
                 //work on .Remove 
 
-           
+
 
                 try
-            {
-                    
+                {
+
                     viewModel.List.UserId = user.Id;
                     _context.Update(viewModel.List);
                     _context.Update(newList);
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                }
+
+
+
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ListExists(viewModel.List.ListId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+
+                }
+                return RedirectToAction(nameof(Index));
             }
-
-           
-
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ListExists(viewModel.List.ListId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-
-                }
-            return RedirectToAction(nameof(Index));
+            return View(viewModel.List);
         }
-        return View(viewModel.List);
-    }
 
-    // GET: Lists/Delete/5
-    public async Task<IActionResult> Delete(int? id)
+        // GET: Lists/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -253,7 +253,16 @@ namespace BacklogBeta.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
+
+
         {
+            var ListRefIds = _context.MovieList.Where(lrfi => lrfi.List.ListId == id);
+            foreach (var listId in ListRefIds)
+            {
+                _context.MovieList.Remove(listId);
+
+            }
+
             var list = await _context.List.FindAsync(id);
             _context.List.Remove(list);
             await _context.SaveChangesAsync();
@@ -265,6 +274,6 @@ namespace BacklogBeta.Controllers
             return _context.List.Any(e => e.ListId == id);
         }
 
-       
+
     }
 }
