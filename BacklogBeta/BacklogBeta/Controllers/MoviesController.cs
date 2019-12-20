@@ -33,6 +33,8 @@ namespace BacklogBeta.Controllers
                                             .Movie
                                             .Include(movie => movie.User)
                                             .Where(movie => movie.UserId == user.Id);
+           
+
             ViewBag.Error = errorMessage;
             return View(await applicationDbContext.ToListAsync());
         }
@@ -115,7 +117,7 @@ namespace BacklogBeta.Controllers
                 return NotFound();
             }
 
-
+           
 
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", movie.UserId);
             return View(movie);
