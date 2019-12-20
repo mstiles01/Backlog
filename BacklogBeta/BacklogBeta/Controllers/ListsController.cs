@@ -129,7 +129,7 @@ namespace BacklogBeta.Controllers
             var viewModel = new MovieListEditViewModel()
 
             {
-                AllMovies = await _context.Movie.ToListAsync(),
+                AllMovies = await _context.Movie.Where(m => m.User == user).ToListAsync(),
                 MovieList = movie,
                 List = await _context.List.FindAsync(id)
 
@@ -145,7 +145,7 @@ namespace BacklogBeta.Controllers
                 return NotFound();
             }
 
-            //ViewData["Movie"] = new SelectList(_context.Movie, "MovieId", "Title", );
+            
             return View(viewModel);
         }
 
