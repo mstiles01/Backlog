@@ -145,6 +145,11 @@ namespace BacklogBeta.Controllers
                 return NotFound();
             }
 
+            //if (viewModel.Movie.UserId != user.Id)
+            //{
+            //    return NotFound();
+            //}
+
             ViewData["Movie"] = new SelectList(_context.Movie, "MovieId", "Title", viewModel.Movie.MovieId);
             return View(viewModel);
         }
