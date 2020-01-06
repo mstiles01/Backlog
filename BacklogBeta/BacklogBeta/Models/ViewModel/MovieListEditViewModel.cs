@@ -17,6 +17,7 @@ namespace BacklogBeta.Models.ViewModel
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         public List List { get; set; }
+        public List<int> SelectedMovies { get; set; } = new List<int>();
       
         public List<SelectListItem> AllMovieOptions
         {
