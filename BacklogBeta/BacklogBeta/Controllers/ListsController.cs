@@ -123,6 +123,18 @@ namespace BacklogBeta.Controllers
             }
 
 
+            
+            var movielistList = await _context.MovieList.Include(m => m.Movie).Include(m => m.List).Where(m => m.ListId == id).ToListAsync();
+
+            var viewModel = new MovieListEditViewModel()
+
+            {
+                AllMovies = await _context.Movie.Where(m => m.User == user).ToListAsync(),
+                MovieList = movielistList,
+                SelectedMovies = movielistList.Select(ml => ml.MovieId).ToList(),
+                List = await _context.List.FindAsync(id),
+               
+
 
             };
             if (viewModel.AllMovieOptions == null)
@@ -174,6 +186,9 @@ namespace BacklogBeta.Controllers
                
 
 
+                try
+                {
+
                     var moviesInList = _context.MovieList.Where(mIL => mIL.ListId == id).ToList();
 
                     foreach (var originalMovie in moviesInList)
@@ -206,6 +221,13 @@ namespace BacklogBeta.Controllers
                         }
 
                     }  
+
+
+                    viewModel.List.UserId = user.Id;
+                    _context.Update(viewModel.List);
+                    await _context.SaveChangesAsync();
+                  
+                }
 
 
 
