@@ -122,30 +122,20 @@ namespace BacklogBeta.Controllers
                 return NotFound();
             }
 
-            var viewModel = new MovieListEditViewModel()
-
-
-            {
-                Movie = await _context.Movie.FindAsync(id),
-                List = await _context.List.FindAsync(id)
-
 
 
             };
-
-
             if (viewModel.AllMovieOptions == null)
             {
                 return NotFound();
             }
 
-
-            if (viewModel.Movie == null)
+            if (viewModel.MovieList == null)
             {
                 return NotFound();
             }
 
-            ViewData["Movie"] = new SelectList(_context.Movie, "MovieId", "Title", viewModel.Movie.MovieId);
+            
             return View(viewModel);
         }
 
@@ -180,30 +170,43 @@ namespace BacklogBeta.Controllers
 
 
             if (ModelState.IsValid)
-
             {
-
-                var newList = new MovieList
-                {
-
-                    MovieListId = viewModel.MovieListInstance?.MovieListId,
-                    ListId = viewModel.List.ListId,
-                    MovieId = viewModel.Movie.MovieId
-
-                };
-
-                //work on .Remove 
+               
 
 
+                    var moviesInList = _context.MovieList.Where(mIL => mIL.ListId == id).ToList();
 
-                try
-                {
+                    foreach (var originalMovie in moviesInList)
+                    {
+                        var originalMovieId = originalMovie.MovieId;
+                        var movieInSelectedList = viewModel.SelectedMovies.Find(mISL => mISL == originalMovieId);
 
-                    viewModel.List.UserId = user.Id;
-                    _context.Update(viewModel.List);
-                    _context.Update(newList);
-                    await _context.SaveChangesAsync();
-                }
+                        if (movieInSelectedList == 0)
+                        {
+                            _context.MovieList.Remove(originalMovie);
+                        }
+                    }
+
+
+
+                    foreach (var selectedMovie in viewModel.SelectedMovies)
+                    {
+                        var movieInOriginalList = moviesInList.Find(m => m.MovieId == selectedMovie);
+
+                        if(movieInOriginalList == null)
+                        {
+                            var SelectedMovieInstance = new MovieList
+                            {
+                                
+                                ListId = id,
+                                MovieId = selectedMovie
+                            };
+
+                            _context.MovieList.Add(SelectedMovieInstance);
+                        }
+
+                    }  
+
 
 
 
@@ -236,7 +239,9 @@ namespace BacklogBeta.Controllers
 
             var list = await _context.List
                 .Include(l => l.User)
+                .Where(l => l.ListId == id)
                 .FirstOrDefaultAsync(m => m.ListId == id);
+
             if (list == null)
             {
                 return NotFound();

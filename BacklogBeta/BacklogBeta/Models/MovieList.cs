@@ -14,10 +14,10 @@ namespace BacklogBeta.Models
         public int MovieId { get; set; }
         [Required]
         public int ListId { get; set; }
-       
+
         public Movie Movie { get; set; }
         public List List { get; set; }
-       
+
 
     }
 }
