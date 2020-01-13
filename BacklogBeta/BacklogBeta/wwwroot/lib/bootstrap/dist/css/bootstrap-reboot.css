@@ -89,8 +89,9 @@ dt {
 }
 
 dd {
-  margin-bottom: .5rem;
-  margin-left: 0;
+    margin-bottom: .5rem;
+    margin-left: 0;
+  
 }
 
 blockquote {
@@ -164,10 +165,15 @@ pre {
 figure {
   margin: 0 0 1rem;
 }
-
+dd.movie_img {
+    max-height: 200%;
+    max-width: 55%;
+}
 img {
-  vertical-align: middle;
-  border-style: none;
+    vertical-align: middle;
+    border-style: none;
+    max-height: 200%;
+    max-width: 55%;
 }
 
 svg {
