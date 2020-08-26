@@ -9,7 +9,6 @@
 
 <div>
     <h4>List</h4>
-    <a asp-action="Create" asp-controller="Movies">Add Movie</a>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -33,7 +32,7 @@
     {
     <li>
         @movie.Movie?.Title  <a asp-Controller="Movies" asp-action="FromListDel" asp-route-id="@movie.MovieListId"> Delete from List</a>  |
-        @movie.Movie?.Title  <a asp-Controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId">Movie Details</a> |
+          <a asp-Controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId">Movie Details</a> |
     </li>
     }
 </ul>
